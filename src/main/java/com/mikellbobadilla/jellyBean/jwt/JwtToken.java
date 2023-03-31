@@ -14,18 +14,16 @@ import io.jsonwebtoken.security.Keys;
 
 @Service
 public class JwtToken {
-  private final String secretKey = "mb5ejncUQ/aZz+ixLZzxoMcUPX2AJ6pgZ+EneNmgAnA=";
 
   public String createToken(UserDetails userDetails){
-    String jws = Jwts.builder()
+
+    return Jwts.builder()
                 .setHeaderParam("typ", "JWT")
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(new Date(System.currentTimeMillis()))
                 .setExpiration(new Date(System.currentTimeMillis() + TimeUnit.HOURS.toMillis(24)))
                 .signWith(getSignInKey())
                 .compact();
-
-    return jws;
   }
   
   public Boolean isTokenValid(String token, UserDetails userDetails){
@@ -48,6 +46,7 @@ public class JwtToken {
   }
 
   private Key getSignInKey(){
+    String secretKey = "mb5ejncUQ/aZz+ixLZzxoMcUPX2AJ6pgZ+EneNmgAnA=";
     byte[] keyBytes = Decoders.BASE64.decode(secretKey);
     return Keys.hmacShaKeyFor(keyBytes);
   }
